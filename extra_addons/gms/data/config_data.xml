@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data noupdate="1">
+        <record id="set_time_offset_limit_upper" model="ir.config_parameter">
+          <field name="key">set_time_offset_limit_upper</field>
+          <field name="value">1</field>
+        </record>
+        <record id="set_time_offset_limit_under" model="ir.config_parameter">
+          <field name="key">set_time_offset_limit_under</field>
+          <field name="value">-1</field>
+        </record>
+        <record id="set_time_for_wfh_submit" model="ir.config_parameter">
+          <field name="key">set_time_for_wfh_submit</field>
+          <field name="value">12</field>
+        </record>
+        <record id="minmum_wao_register" model="ir.config_parameter">
+          <field name="key">minmum_wao_register</field>
+          <field name="value">10</field>
+        </record>
+        <record id="annual_leave_id" model="ir.config_parameter">
+          <field name="key">leave.annual_leave_id</field>
+          <field name="value">0</field>
+        </record>
+        <record id="personal_leave_id" model="ir.config_parameter">
+          <field name="key">leave.personal_leave_id</field>
+          <field name="value">0</field>
+        </record>
+        <record id="submit_wfh_time_limit" model="ir.config_parameter">
+          <field name="key">wfh.submit_wfh_time_limit</field>
+          <field name="value">12</field>
+        </record>
+        <record id="time_gap_raw_data_record" model="ir.config_parameter">
+          <field name="key">raw_data.time_gap_raw_data_record</field>
+          <field name="value">10</field>
+        </record>
+        <record id="time_change_wfh_to_att" model="ir.config_parameter">
+          <field name="key">leave.time_change_wfh_to_att</field>
+          <field name="value">2</field>
+        </record>
+        <record id="company_date_from" model="ir.config_parameter">
+          <field name="key">company.date_from</field>
+          <field name="value">27</field>
+        </record>
+        <record id="company_date_to" model="ir.config_parameter">
+          <field name="key">company.date_to</field>
+          <field name="value">26</field>
+        </record>
+  </data>
+</odoo>

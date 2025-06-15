@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<odoo>
+
+	<record id="attendance_approve_cron" model="ir.cron">
+                <field name="name">Approve Attendance: Update all attendance with status normal to verified</field>
+                <field name="model_id" ref="model_hr_attendance"/>
+                <field name="state">code</field>
+                <field name="code">model._cron_approve_attendance()</field>
+                <field name="nextcall" eval="(DateTime.now() + relativedelta(months=1, day=1, hour=0, minute=0)).strftime('%Y-%m-%d %H:%M:%S')"/>
+                <field name="interval_number">1</field>
+                <field name="interval_type">months</field>
+                <field name="numbercall">-1</field>
+                <field name="doall" eval="False"/>
+        </record>
+
+        <record id="work_from_home_complete_cron" model="ir.cron">
+                <field name="name">Complete WFH request: Update all WFH with status approved to completed</field>
+                <field name="model_id" ref="model_hr_attendance"/>
+                <field name="state">code</field>
+                <field name="code">model._cron_complete_wfh()</field>
+                <field eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 00:00:00')" name="nextcall" />
+                <field name="interval_number">1</field>
+                <field name="interval_type">days</field>
+                <field name="numbercall">-1</field>
+                <field name="doall" eval="False"/>
+        </record>
+        <record id="work_from_home_to_attendance_cron" model="ir.cron">
+                <field name="name">Change WFH request: Update all completed WFH to Att normal</field>
+                <field name="model_id" ref="model_hr_attendance"/>
+                <field name="state">code</field>
+                <field name="code">model._cron_change_wfh_to_att()</field>
+                <field eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 00:00:00')" name="nextcall" />
+                <field name="interval_number">1</field>
+                <field name="interval_type">days</field>
+                <field name="numbercall">-1</field>
+                <field name="doall" eval="False"/>
+        </record>
+
+        <record id="shared_calendar_load_cron" model="ir.cron">
+                <field name="name">Load Shared Calendar</field>
+                <field name="model_id" ref="model_gms_calendar"/>
+                <field name="state">code</field>
+                <field name="code">model.fetch_combined_data()</field>
+                <field name="interval_number">5</field>
+                <field name="interval_type">minutes</field>
+                <field name="numbercall">-1</field>
+                <field name="doall" eval="False"/>
+        </record>
+
+        <!-- <record id="approve_wfh_cron" model="ir.cron">
+                <field name="name">Approve WFH request</field>
+                <field name="model_id" ref="model_hr_attendance"/>
+                <field name="state">code</field>
+                <field name="code">model._cron_approve_wfh()</field>
+                <field eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 00:00:00')" name="nextcall" />
+                <field name="interval_number">1</field>
+                <field name="interval_type">days</field>
+                <field name="numbercall">-1</field>
+                <field name="doall" eval="False"/>
+        </record> -->
+        <record id="send_timesheet_cron" model="ir.cron">
+                <field name="name">Send Cron</field>
+                <field name="model_id" ref="gms.model_gms_work_location_report_wizard"/>
+                <field name="state">code</field>
+                <field name="code">model.action_send_time_sheet_report()</field>
+                
+        </record>
+</odoo>

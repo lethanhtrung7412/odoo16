@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="odoo_advanced_filter.ListRenderer" owl="1" t-inherit="web.ListRenderer" t-inherit-mode="extension">
+        <xpath expr="//table/thead" position="inside">
+            <tr t-if="canShowAdvanceSearch">
+                <th t-if="hasSelectors" class="o_list_record_selector o_list_controller align-middle pe-1 cursor-pointer" tabindex="-1">
+                </th>
+                <t t-foreach="state.columns" t-as="column" t-key="column.id">
+                    <th style="padding-top:0; padding-bottom: 5px;" t-if="column.type === 'field'" t-att-data-name="column.name" t-att-class="getColumnClass(column) + ' opacity-trigger-hover'" t-on-mouseenter="ev =&gt; this.onHoverSortColumn(ev, column)" t-on-mouseleave="ev =&gt; this.onHoverSortColumn(ev, column)" t-on-mouseup="onColumnTitleMouseUp" t-on-keydown.synthetic="(ev) =&gt; this.onCellKeydown(ev)" t-att-data-tooltip-template="isDebugMode ? 'web.FieldTooltip' : false" t-att-data-tooltip-info="isDebugMode ? makeTooltip(column) : false" data-tooltip-delay="1000" tabindex="-1">
+                        <t t-if="column.hasLabel and column.widget !== 'handle'">
+                        <t t-set="isNumeric" t-value="isNumericColumn(column)"/>
+                        <t t-set="isDateTime" t-value="isDatetimeColumn(column)"/>
+                        <t t-set="isBoolean" t-value="isBooleanColumn(column)" />
+                        <t t-set="searchable" t-value="isSearchable(column)"/>
+                        <t t-set="booleanOptions" t-value="getBooleanOptions(column)"/>
+                        <t t-set="selectOptions" t-value="getSelectionOptions(column)"/>
+    
+                            <t t-if="selectOptions &amp;&amp; searchable" t-call="{{ constructor.SelectionField }}">
+                                <t t-set="column" t-value="column"/>
+                                <t t-set="select_options" t-value="selectOptions"/>
+                            </t>
+                            <t t-elif="isDateTime &amp;&amp; searchable" t-call="{{ constructor.DatetimeField }}">
+                                <t t-set="column" t-value="column"/>
+                            </t>
+                            <t t-elif="isBoolean &amp;&amp; searchable" t-call="{{ constructor.BooleanField }}">
+                                <t t-set="column" t-value="column"/>
+                                <t t-set="select_options" t-value="booleanOptions" />
+                            </t>
+                            <t t-else="">
+                                <t t-if="searchable" t-call="{{ constructor.InputField }}">
+                                    <t t-set="column" t-value="column"/>
+                                    <t t-set="operators" t-value="getSelectOptions(column)"/>
+                                </t>
+                            </t>
+                        </t>
+                    </th>
+                    <th t-else="" t-on-keydown.synthetic="(ev) =&gt; this.onCellKeydown(ev)" t-att-class="{o_list_button: column.type === 'button_group'}"/>
+                </t>
+                <th t-if="displayOptionalFields or activeActions.onDelete" class="o_list_controller o_list_actions_header" style="width: 32px; min-width: 32px">
+                </th>
+            </tr>
+        </xpath>
+    </t>
+    <t t-name="odoo_advanced_filter.InputField" owl="1">
+
+		<select class="o_input operator-search adv_input" style="display: none;">
+
+			<t t-foreach="operators" t-as="operator" t-key="operator_index">
+				<option t-att-selected="operator.symbol === value" t-att-value="operator.symbol" t-att-search-value="operator.value" t-esc="operator.description"/>
+			</t>
+		</select>
+		<input class="o_input inline-search adv_input" t-att-data-field="column.name" t-att-alt="column.string" t-on-keydown.synthetic="(ev) =&gt; this._onKeyDownSearch(ev)" style="width: 100%"/>
+	</t>
+
+	<t t-name="odoo_advanced_filter.SelectionField" owl="1">
+
+		<!-- <div>Options</div> -->
+		<select class="o_input selection-field adv_input" t-att-data-field="column.name" t-att-alt="column.string" t-on-change="(ev) =&gt; this._onChangedSelectionSearch(ev, column)">
+
+			<option t-att-value="''" t-esc="'all'"/>
+			<t t-foreach="select_options" t-as="option" t-key="option_index">
+				<option t-att-selected="option[0] === column.seleted_value" t-att-value="option[0]" t-esc="option[1]"/>
+			</t>
+		</select>
+	</t>
+    <t t-name="odoo_advanced_filter.BooleanField" owl="1">
+
+		<!-- <div>Options</div> -->
+		<select class="o_input selection-field adv_input" t-att-data-field="column.name" t-att-alt="column.string" t-on-change="(ev) =&gt; this._onChangedBooleanSearch(ev, column)">
+
+			<option t-att-value="''" t-esc="'all'"/>
+			<t t-foreach="select_options" t-as="option" t-key="option_index">
+				<option t-att-selected="option[0] === column.seleted_value" t-att-value="option[0]" t-esc="option[1]"/>
+			</t>
+		</select>
+	</t>
+	<t t-name="odoo_advanced_filter.DatetimeField" owl="1">
+		<div class="adv_input_flex">
+			<DatePickerAdvanced inputId="column.id" column="column" onDateTimeChanged="(date, column) =&gt; this.onchangeDatetimeFrom(date, column)"/>
+            <DatePickerAdvanced inputId="column.id" column="column" onDateTimeChanged="(date, column) =&gt; this.onchangeDatetimeTo(date, column)"/>
+
+		</div>
+	</t>
+</templates>

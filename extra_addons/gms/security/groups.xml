@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="group_hr_leader" model="res.groups">
+        <field name="name">Leader: Manage team member</field>
+        <field name="category_id" ref="base.module_category_human_resources_employees"/>
+        <field name="implied_ids" eval="[(6, 0, [ref('base.group_user'), ref('hr_attendance.group_hr_attendance_kiosk')])]"/>
+        <field name="comment">The user will be able to approve document created by employees which are in their team.</field>
+    </record>
+
+    <record id="hr.group_hr_user" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_hr_leader'))]"/>
+    </record>
+
+</odoo>

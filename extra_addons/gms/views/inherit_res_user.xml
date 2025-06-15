@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="inherit_res_users_view_form_profile" model="ir.ui.view">
+        <field name="name">inherit_res_users_view_form_profile</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="hr.res_users_view_form_profile" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//field[@name='visa_no']/parent::group" position='attributes'>
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath
+                expr="//field[@name='certificate']/parent::group" position='attributes'>
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='identification_id']" position="after">
+                <field name="identification" attrs="{'readonly': [('can_edit', '=', False)]}" />
+            </xpath>
+            <xpath expr="//field[@name='country_of_birth']" position="after">
+                <field name="permanent_address" attrs="{'readonly': [('can_edit', '=', False)]}" />
+            </xpath>
+            <xpath expr="//field[@name='children']" position="after">
+                <field name="children_ids"
+                    attrs="{'invisible': [('children', '=', 0)], 'readonly': [('can_edit', '=', False)]}">
+                    <tree editable="bottom">
+                        <field name="name" />
+                        <field name="birthdate" />
+                    </tree>
+                </field>
+            </xpath>
+            <xpath expr="//field[@name='passport_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

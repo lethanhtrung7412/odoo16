@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_calendar_attendance_timeoff" model="ir.ui.view">
+        <field name="name">attendance.timeoff.calendar</field>
+        <field name="model">gms.calendar</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <calendar string="Attendance and Time Off Calendar" create="0" show_unusual_days="True" mode="month" quick_add="false" color="record_type" date_start="start_date" date_stop="end_date">
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="name" filters="1"/>
+                <field name="reason" optional="hide"/>
+                <field name="record_type" filters="1"/>
+                <field name="holiday_type"/>
+                <field name="record_form_url" widget="url" string="Open" text="Click here"/>
+
+                <!-- <field name="record_form_url" clickable="True">
+                    <t t-esc="record_form_url">Open Record</t>
+                </field> -->
+            </calendar>
+        </field>
+    </record>
+    <record id="action_combined_model_calendar" model="ir.actions.act_window">
+        <field name="name">Attendance and Time Off Calendar</field>
+        <field name="res_model">gms.calendar</field>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="view_calendar_attendance_timeoff"/>
+        <field name="context">{}</field>
+    </record>
+    
+    <menuitem  
+        id="menu_combine_calendar"
+        name="Combine Calendar"
+        sequence="0"
+        action="action_combined_model_calendar"
+        parent="calendar.mail_menu_calendar"/>
+
+    <menuitem
+        id="calendar.mail_menu_calendar"
+        name="Calendar"
+        sequence="10"
+        action="action_combined_model_calendar"
+        web_icon="calendar,static/description/icon.svg"
+        groups="base.group_user"/>
+
+</odoo>

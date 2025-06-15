@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="inherit_hr_department_form" model="ir.ui.view">
+        <field name="name">inherit.hr.department.form</field>
+        <field name="model">hr.department</field>
+        <field name="inherit_id" ref="hr.view_department_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='parent_id']" position="after">
+                <field name="fix_day_in_office" attrs="{'readonly': [('is_manager', '=', False)]}" />
+            </xpath>
+
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="attrs">{'readonly': [('is_manager', '=', False)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='manager_id']" position="attributes">
+                <attribute name="attrs">{'readonly': ['|', ('is_manager', '=', False), ('allow_leader_edit', '=', False)]}</attribute>
+                <attribute name="options">{'no_create': 1, 'no_open': 1}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='parent_id']" position="attributes">
+                <attribute name="attrs">{'readonly': ['|', ('is_manager', '=', False), ('allow_leader_edit', '=', False)]}</attribute>
+            </xpath>
+            
+            <xpath expr="//sheet" position="inside">
+                <notebook>
+                    <page string="Validity Period" attrs="{'invisible': [('fix_day_in_office', '=', False)]}">
+                        <group style="row-gap:15px">
+                            <field name="is_manager" invisible="1"/>
+                            <field name="allow_leader_edit" invisible="1"/>
+                            <label class="o_form_label" for="validity_period"/>
+                            <div>
+                                <button attrs="{'invisible': [('is_manager', '=', False)]}" name="%(create_new_validity)d" string="Add new Period" type="action" class="oe_highlight" context="{'default_department_id': id,'default_created_by': manager_id}"/>
+                                <field name="validity_period" class="mt-5" attrs="{'readonly': [('is_manager', '=', False)]}" />
+                            </div>
+                        </group>
+                    </page>
+                </notebook>
+            </xpath>
+
+            <!-- <xpath expr="//div[@class='oe_chatter']" position="after">
+                <field name="child_ids" widget="hr_org_chart" readonly="1" nolabel="1"/>
+            </xpath> -->
+        </field>
+    </record>
+
+    <record id="hr.hr_department_kanban_action" model="ir.actions.act_window">
+        <field name="view_mode">tree,kanban,form</field>
+    </record>
+</odoo>

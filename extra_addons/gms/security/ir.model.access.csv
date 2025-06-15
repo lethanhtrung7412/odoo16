@@ -1,0 +1,14 @@
+id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
+access_hr_attendance_raw_data,hr.attendance.raw.data,model_hr_attendance_raw_data,hr_attendance.group_hr_attendance_user,1,1,1,1
+access_hr_attendance_raw_data_user,hr.attendance.raw.data,model_hr_attendance_raw_data,hr_attendance.group_hr_attendance,1,0,0,0
+hr_attendance.access_hr_attendance_user,hr.attendance.system.user,model_hr_attendance,hr_attendance.group_hr_attendance,1,1,1,0
+access_hr_attendance_import_history,hr.attendance.import.history,model_hr_attendance_import_history,hr_attendance.group_hr_attendance_user,1,1,1,1
+access_hr_attendance_wfh_request,hr.attendance.work.from.home,model_hr_attendance_work_from_home,hr_attendance.group_hr_attendance,1,1,1,1
+access_gms_calendar,gms.calendar,model_gms_calendar,hr_attendance.group_hr_attendance,1,1,1,1
+day_of_week,day.of.week,model_day_of_week,base.group_user,1,0,0,0
+validity_period,validity_period,model_validity_period,base.group_user,1,1,1,1
+access_gms_work_location_report_wizard_all,access.gms.work.location.report.wizard.all,gms.model_gms_work_location_report_wizard,base.group_user,1,1,1,1
+access_hr_employee_team_lead,access.hr.employee.team.lead,hr.model_hr_employee,gms.group_hr_leader,1,0,0,0
+access_hr_department_team_lead,access.hr.department.team.lead,hr.model_hr_department,gms.group_hr_leader,1,1,0,0
+access_hr_employee_children,access.hr.employee.children,model_hr_employee_children,base.group_user,1,1,1,1
+access_hr_attendance_wfh_report_action,access.hr.attendance.wfh.report.action,model_hr_attendance_wfh_report,hr_attendance.group_hr_attendance_user,1,1,1,1

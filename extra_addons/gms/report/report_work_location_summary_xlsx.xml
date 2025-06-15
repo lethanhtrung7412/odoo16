@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="report_gms_work_location_summary_xlsx" model="ir.actions.report">
+        <field name="name">Work Location Summary</field>
+        <field name="model">gms.work.location.report.wizard</field>
+        <field name="report_type">xlsx</field>
+        <field name="report_name">gms.work_location_summary_xlsx</field>
+        <field name="report_file">report_work_location_summary_xlsx</field>
+        <field name="binding_model_id" ref="model_gms_work_location_report_wizard" />
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Report_From_%s_To_%s ' % (object.date_from, object.date_to)</field>
+    </record>
+
+</odoo>

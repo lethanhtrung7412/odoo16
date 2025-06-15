@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="FieldDateMultipleDate" owl="1">
+        <input type="text" t-model="state.date" class="input_datepicker border-bottom" t-ref="inputdate"
+               t-on-click="_onSelectDateField"
+               style="border: none;"
+               />
+    </t>
+</templates>

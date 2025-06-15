@@ -1,0 +1,130 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="mail_template_change_period" model="mail.template">
+        <field name="name">Work from home Cancelation</field>
+        <field name="model_id" ref="model_validity_period" />
+        <field name="email_to">{{ ctx.get('email_to') }}</field>
+        <field name="subject">WFH Request Update</field>
+        <field name="body_html" type="html">
+            <div> Dear <t t-out="ctx.get('name')" />, <br />
+                <br />
+                <div> This email notifies you
+                about a WFH request submitted on <t t-out="ctx.get('wfh_date')" /> has been cancel
+                due to change of the range when work from home. </div>
+                <br />
+                <div>
+                    Please go to the Odoo, and register your WFH again follow new period.
+                </div>
+                <br />
+                <br />
+                <div>
+                Thank you for your time and attention to this matter.<br /><br /> Sincerely,<br />
+                    <br />
+                The Odoo Attendance Module </div>
+            </div>
+        </field>
+    </record>
+    <record id="mail_template_notify_hr_attendance_email" model="mail.template">
+        <field name="name">New WFH request</field>
+        <field name="model_id" ref="model_hr_attendance_work_from_home" />
+        <field name="email_to">{{ object.employee_id.parent_id.work_email }}</field>
+        <field name="subject">WFH Request from {{ object.employee_id.name }} - Action Required</field>
+        <field name="body_html" type="html">
+            <div> Dear <t t-out="object.employee_id.parent_id.name or ''">Admin</t>, <br />
+                    <br />
+                    <div>
+                This email notifies you about a WFH request submitted by <t
+                        t-out="object.employee_id.name or ''">User</t> for <t
+                        t-out="object.multiple_date or ''">Today</t>. </div>
+                    <br />
+                    <div> Reason: <t
+                        t-esc="object.description">None</t>
+                </div>
+                    <br />
+                    <br />
+                    <div>
+                Please note: Your approval/rejection is required before <t
+                        t-out="object.check_in.date() or ''">Today</t>.<br /><br /> Thank you for
+                your time and attention to this matter.<br /><br /> Sincerely,<br />
+                        <br /> The Odoo
+                Attendance Module </div>
+            </div>
+        </field>
+    </record>
+
+    <record id="mail_template_reject_hr_attendance_email" model="mail.template">
+        <field name="name">Reject WFH request</field>
+        <field name="model_id" ref="model_hr_attendance" />
+        <field name="email_to">{{ object.employee_id.work_email }}</field>
+        <field name="subject"> WFH Request Update: Rejected</field>
+        <field name="body_html" type="html">
+            <div> Dear <t t-out="object.employee_id.name">User</t>,<br />
+                    <br /> This email notifies
+                you that your Work From Home (WFH) request for <t
+                    t-out="object.check_in.date() or ''">Date</t> is rejected by your manager. <br />
+                    <br />
+                Manager Comments: <t t-out="object.reason or ''">No Comment</t>
+                    <br />
+                    <br /> We hope
+                this information is helpful.<br /><br /> Sincerely,<br />
+                    <br /> The Odoo Attendance
+                Module </div>
+        </field>
+    </record>
+
+    <record id="mail_template_required_to_office" model="mail.template">
+        <field name="name">Required to office</field>
+        <field name="model_id" ref="model_hr_attendance" />
+        <field name="email_to">{{ object.employee_id.work_email }}</field>
+        <field name="subject"> WFH register Update: Required to office</field>
+        <field name="body_html" type="html">
+            <div> Dear <t t-out="object.employee_id.name">User</t>,<br />
+                    <br /> This email notifies
+                you that your Work From Home (WFH) request for <t
+                    t-out="object.check_in.date() or ''">Date</t> has been changed to Required to
+                office by your manager. <br />
+                    <br /> Manager Comments: <t
+                    t-out="object.reason or ''">None</t>
+                    <br />
+                    <br /> We hope this information is
+                helpful.<br /><br /> Sincerely,<br />
+                    <br /> The Odoo Attendance Module </div>
+        </field>
+    </record>
+
+    <record id="mail_template_approved_hr_attendance_email" model="mail.template">
+        <field name="name">Approve WFH request</field>
+        <field name="model_id" ref="model_hr_attendance" />
+        <field name="email_to">{{ object.employee_id.work_email }}</field>
+        <field name="subject"> WFH register Update: Approve WFH request</field>
+        <field name="body_html" type="html">
+            <div> Dear <t t-out="object.employee_id.name">User</t>,<br />
+                    <br /> This email notifies
+                you that your Work From Home (WFH) request for <t
+                    t-out="object.check_in.date() or ''">Date</t> has been changed to Required to
+                office by your manager. <br />
+                    <br /> Manager Comments: <t
+                    t-out="object.reason or ''">None</t>
+                    <br />
+                    <br /> We hope this information is
+                helpful.<br /><br /> Sincerely,<br />
+                    <br /> The Odoo Attendance Module </div>
+        </field>
+    </record>
+
+    <record id="mail_send_report" model="mail.template">
+        <field name="name">Send report</field>
+        <field name="model_id" ref="model_hr_attendance" />
+        <field name="email_to">{{ ctx.get("email_to") }}</field>
+        <field name="subject">Time Sheet Summary from {{ ctx.get("date_from") }} to {{
+            ctx.get("date_to") }}</field>
+        <field name="body_html" type="html">
+            <div> Dear <t t-out="ctx.get('name')" /> , <br />
+                <br /> This is the time sheet summary
+                from <t t-out="ctx.get('date_from')" /> to <t t-out="ctx.get('date_to')" />
+                <t
+                    t-out="ctx.get('inv')" /> Sincerely,<br />
+                    <br /> The Odoo Attendance Module </div>
+        </field>
+    </record>
+</odoo>

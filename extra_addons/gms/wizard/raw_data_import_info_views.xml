@@ -1,0 +1,22 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="raw_data_import_info_form_views">
+            <field name="name">Raw data import info</field>
+            <field name="model">raw.data.import.info</field>
+            <field name="arch" type="xml">
+                <form string="Import info">
+                    <sheet>
+                        <group>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                        </group>
+                        <footer>
+                            <button name="action_import_data" string="Submit" type="object" class="btn-primary"/>
+                            <button string="Cancel" class="btn-secondary" special="cancel"/>
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+
+    <record id="hr_department_team_lead_rule" model="ir.rule">
+        <field name="name">Leader: Rule department team leader</field>
+        <field name="model_id" ref="model_hr_department"/>
+        <field name="global" eval="False"/>
+        <!--field name="perm_write" eval="True"/--> <!-- ! TODO: keep this line for future refactoring and replacement of extra_addons/gms/models/department.py:_check_is_manager  -->
+        <field name="domain_force">[('id', 'in', user._all_owned_dept().ids)]</field>
+        <field name="groups" eval="[(4, ref('group_hr_leader'))]"/>
+    </record>
+
+    <record id="hr_department_employee" model="ir.rule">
+        <field name="name">Employee: Public Department</field>
+        <field name="model_id" ref="model_hr_department"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('hr.group_hr_user'))]"/>
+    </record>
+    
+</odoo>

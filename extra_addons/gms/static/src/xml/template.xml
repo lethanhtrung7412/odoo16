@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="gms.DateRangeGM" owl="1">
+        <t t-if="canDisplay">
+            <div class="btn-group o_dropdown datepicker" style="display: inline-flex; margin-top: 6px">
+                <span t-on-click="_onClickDateRangePicker" id="daterange-input" style="cursor: pointer; width: auto;">
+                    <i class="fa fa-calendar"></i> <span class="result-date-statistic" style="color:#666666; font-weight: 500"> Date Search </span>
+                </span>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="gms.CustomDateRange" t-inherit="web.ControlPanel.Regular" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[@class='btn-group o_search_options position-static']" position="inside">
+                <t t-component="SearchMenuCustom.Component"/>
+                <t t-component="DropdownMenuCustom.Component"/>
+        </xpath>
+    </t>
+
+    <t t-name="gms.DepartmentDropdown" owl="1">
+        <Dropdown class="'o_group_by_menu btn-group'" togglerClass="'btn btn-light'">
+            <t t-set-slot="toggler">
+                <i class="me-1 fa fa-building" t-att-class="icon"></i><span class="o_dropdown_title">Department</span>
+            </t>
+            <t t-foreach="state.departmentList" t-as="option" t-key="option.id">
+                <DropdownItem t-esc="option.name" onSelected="() => this.changeDepartmentFilter(option)"/>
+            </t>
+        </Dropdown>
+
+        <!-- <option t-att-value="''" t-esc="'all'"/>
+        <t t-foreach="state.departmentList" t-as="option" t-key="option.id">
+            <option t-att-value="option.name"/>
+        </t> -->
+    </t>
+
+
+</templates>

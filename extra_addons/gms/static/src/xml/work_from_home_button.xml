@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="button_wfh_create.ListView.Buttons" t-inherit="web.ListView.Buttons">
+        <xpath expr="//*[@class='btn btn-secondary fa fa-download o_list_export_xlsx']" position="before">
+           <button type="button" class="btn btn-primary" style="margin-right: 10px;" t-on-click="OnTestClick">
+               WFH Register
+           </button>
+
+           <button type="button" class="btn btn-danger text-uppercase" style="margin-right: 10px" t-on-click="OnUrgentClick">
+                Urgent Request
+            </button>
+
+            <button type="button" class="btn btn-info text-uppercase" t-if="showExport" t-on-click="OnExportTimeSheet">
+                Timesheet Summary
+            </button>
+        </xpath>
+        <xpath expr="//*[@class='btn btn-primary o_list_button_add']" position="replace">
+           <button type="button" class="btn btn-primary" style="margin-right: 10px;" groups="hr_attendance.group_hr_attendance_user" t-on-click="OnCreateNewAttendance">
+               New
+           </button>
+        </xpath>
+    </t>
+</templates>

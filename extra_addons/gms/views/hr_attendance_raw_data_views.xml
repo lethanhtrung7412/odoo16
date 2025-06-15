@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_attendance_raw_data_view_tree" model="ir.ui.view">
+        <field name="name">hr.attendance.raw.data.tree</field>
+        <field name="model">hr.attendance.raw.data</field>
+        <field name="arch" type="xml">
+            <tree editable="top">
+                <field name="username" attrs="{'readonly': True}"/>
+                <field name="record_type" attrs="{'readonly': True}"/>
+                <field name="date" attrs="{'readonly': True}"/>
+                <field name="is_transformed" attrs="{'readonly': True}"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="inherit_hr_attendance_raw_data_view_tree" model="ir.ui.view">
+        <field name="name">res.inherit.hr.attendance.raw.data.tree</field>
+        <field name="model">hr.attendance.raw.data</field>
+        <field name="inherit_id" ref="hr_attendance_raw_data_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="js_class">button_in_tree</attribute>
+<!--                <attribute name="create">false</attribute>-->
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_hr_attendance_raw_data_view_filter" model="ir.ui.view">
+        <field name="name">res.inherit.hr.attendance.raw.data.filter</field>
+        <field name="model">hr.attendance.raw.data</field>
+<!--        <field name="inherit_id" ref="hr_attendance_raw_data_view_tree"/>-->
+        <field name="arch" type="xml">
+            <search string="Hr Raw data search">
+                <filter string="Transformed"  name="is_transformed" domain="[('is_transformed', '=', True)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_attendance_action_raw_data" model="ir.actions.act_window">
+        <field name="name">Raw Data</field>
+        <field name="res_model">hr.attendance.raw.data</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+            id="menu_hr_attendance_raw_data"
+            name="Raw Data"
+            sequence="25"
+            action="hr_attendance_action_raw_data"
+            groups="hr_attendance.group_hr_attendance_user"
+            parent="hr_attendance.menu_hr_attendance_root"/>
+</odoo>

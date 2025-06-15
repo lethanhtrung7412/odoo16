@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="inherit_hr_employee_view" model="ir.ui.view">
+        <field name="name">inherit.hr.employee.view</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='work_email']" position='after'>
+                <field name="work_project" widget="many2many_tags" />
+            </xpath>
+
+            <xpath expr="//field[@name='km_home_work']" position='attributes'>
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//div[@name='div_km_home_work']" position='attributes'>
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath
+                expr="//field[@name='visa_no']/parent::group" position='attributes'>
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='identification_id']" position="after">
+                <field name="identification" />
+            </xpath>
+
+            <xpath expr="//field[@name='passport_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='country_of_birth']" position="after">
+                <field name="permanent_address" />
+            </xpath>
+
+            <xpath expr="//field[@name='children']" position="after">
+                <field name="children_ids" attrs="{'invisible': [('children', '=', 0)]}">
+                    <tree editable="bottom">
+                        <field name="name" />
+                        <field name="birthdate" />
+                    </tree>
+                </field>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

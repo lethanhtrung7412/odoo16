@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="inherit_time_off_approval_views" model="ir.ui.view">
+        <field name="name">inherit_time_off_approval_views</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="create_date" string="Created On" optional="1" />
+                <field name="write_date" string="Approved On" optional="1" />
+            </xpath>
+            <xpath expr="//field[@name='all_employee_ids']" position="replace">
+                <field name="employee_id" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

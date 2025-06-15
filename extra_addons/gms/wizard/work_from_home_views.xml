@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="work_from_home_view_tree" model="ir.ui.view">
+        <field name="name">hr.attendance.work.from.home.request</field>
+        <field name="model">hr.attendance.work.from.home</field>
+        <field name="arch" type="xml">
+            <form string="Work from home request">
+                <div class="alert alert-info d-flex align-items-center" role="alert">
+                    <div attrs="{'invisible': [('is_urgent', '!=', True)]}">
+                        Urgent Requests Only: Repeated misuse may delay future requests.
+                    </div>
+
+                    <div attrs="{'invisible': [('is_urgent', '==', True)]}">
+                        Your department may have set specific in-office days. Please check your schedule and register for remote work accordingly.
+                    </div>
+                </div>
+                <group>
+                    <field name="employee_id" attrs="{'readonly': [('is_admin', '!=', True)]}"/>
+                    <field name="is_admin" invisible="1"/>
+                    <field name="is_urgent" invisible="1"/>
+                    <field name="request_unit_half"  attrs="{'invisible': [('is_urgent', '=', False)]}"/>
+                    <label for="request_date_from" string="Date" attrs="{'invisible': [('is_urgent', '=', False)]}"/>
+                    <div class="d-flex align-items-center"  attrs="{'invisible': [('is_urgent', '=', False)]}">
+                        <field name="request_date_from" class="oe_inline" string="Date"/>
+                        <label for="request_date_from_period"  attrs="{'invisible': [('request_unit_half', '=', False)]}" string="Shift" class="oe_inline px-3"/>
+                        <field name="request_date_from_period" class="oe_inline" string="Shift" attrs="{'invisible': [('request_unit_half', '=', False)]}" />
+                    </div>
+                    <field name="list_day_wao" attrs="{'invisible': [('is_urgent', '=', True)]}"/>
+                    <field name="multiple_date" widget="multiple_datepicker" string="Date" attrs="{'invisible': [('is_urgent', '=', True)]}"/>
+                    <!-- <field name="check_in" attrs="{'invisible': [('request_unit_half', '!=', False)]}"/>
+                    <field name="check_out" attrs="{'invisible': [('request_unit_half', '!=', False)]}"/> -->
+                    <field name="description" attrs="{'required': [('is_urgent', '=', True)]}"/>
+                    <field name="category" readonly="True"/>
+                </group>
+                <footer>
+                    <button name="action_create_wfh" string="Submit" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="work_from_home_action" model="ir.actions.act_window">
+        <field name="name">work.from.home</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.attendance.work.from.home</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="work_from_home_view_tree"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

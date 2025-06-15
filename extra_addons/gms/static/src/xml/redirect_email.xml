@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="gms.RedirectTemplate" owl="1">
+        <a class="btn btn-primary" t-on-click="onClickRedirect">Send mail</a>
+    </t>
+</templates>

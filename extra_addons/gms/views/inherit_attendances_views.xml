@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="inherit_attendance_view_tree" model="ir.ui.view">
+        <field name="name">res.inherit.attendance</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.view_attendance_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="js_class">button_wfh</attribute>
+                <attribute name="editable"/>
+                <attribute name="action">action_open_wizard</attribute>
+                <attribute name="type">object</attribute>
+                <attribute name="decoration-danger">missing_time_data == True</attribute>
+            </xpath>
+            <xpath expr="//tree">
+                <header>
+                    <button groups="hr_attendance.group_hr_attendance" name="approve_attendance" string="Verify" type="object" class="btn btn-primary"/>
+                </header>
+            </xpath>
+            <xpath expr="//field[@name='employee_id']" position="attributes">
+                <attribute name="attrs">{'readonly': ['|', ('approval_status', '=', 'approved'), ('approval_status', '=', 'normal')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='check_in']" position="attributes">
+                <!-- <attribute name="filter">date</attribute> -->
+                <attribute name="attrs">{'readonly': ['|', ('approval_status', '=', 'approved'), ('approval_status', '=', 'normal')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='check_out']" position="attributes">
+                <attribute name="attrs">{'readonly': ['|', ('approval_status', '=', 'approved'), ('approval_status', '=', 'normal')]}</attribute>
+                <!-- <attribute name="class">{'red': [('check_out', '=', 'check_in')]}</attribute> -->
+            </xpath>
+            <field name="check_in" position="before">
+                <field name="create_date" string="Created On" optional="1"/>
+            </field>
+            <field name="employee_id" position="before">
+                <field name="id" string="Record ID" optional="1"/>
+                <field name="barcode"/>
+            </field>
+            <field name="employee_id" position="after">
+                <field name="department_id"/>
+            </field>
+            <field name="worked_hours" position="before">
+                <field name="category"
+                       widget="badge"/>
+                <field name="missing_time_data" invisible='1'/>
+                <field name="is_urgent" optional="1"/>
+            </field>
+            <xpath expr="//field[@name='worked_hours']" position="attributes">
+                <attribute name="decoration-primary">worked_hours &lt; 8</attribute>
+                <attribute name="decoration-success">worked_hours &gt; 8</attribute>
+            </xpath>
+            <field name="worked_hours" position="after">
+                <field name="approval_status"
+                       attrs="{'readonly': [('approval_status', '=', 'approved')]}"
+                       decoration-primary="approval_status == 'request_completed'"
+                       decoration-warning="approval_status == 'under_review' or approval_status == 'ongoing' or approval_status == 'pending_approval'"
+                       decoration-danger="approval_status == 'missing_data'"
+                       widget="badge"
+                />
+                <field name="approved_by"/>
+            </field>
+
+            
+        </field>
+    </record>
+
+    <record id="hr_attendance_view_calendar" model="ir.ui.view">
+        <field name="name">hr.attendance.calendar</field>
+        <field name="model">hr.attendance</field>
+        <field name="priority" eval="2"/>
+        <field name="arch" type="xml">
+        <calendar date_start="check_in" color="employee_id" mode="month" quick_add="False">
+            <field name="employee_id" filters="1"/>
+            <field name="check_in"/>
+            <field name="check_out"/>
+            <field name="worked_hours"/>
+        </calendar>
+        </field>
+    </record>
+
+    <record id="inherit_hr_attendance_kanban" model="ir.ui.view">
+        <field name="name">res.inherit.attendance.kanban</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.view_hr_attendance_kanban" />
+        <field name="priority" eval="8"/>
+        <field name="arch" type="xml">
+            <field name="check_out" position="after">
+                <field name="approval_status"/>
+                <field name="can_use_button"/>
+                </field>
+            <xpath expr="//kanban/templates" position="replace">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div class="d-flex justify-content-between">
+                                <div><img t-att-src="kanban_image('hr.employee', 'avatar_128', record.employee_id.raw_value)" t-att-title="record.employee_id.value" t-att-alt="record.employee_id.value" class="oe_kanban_avatar o_image_24_cover mr4"/>
+                                    <span class="o_kanban_record_title">
+                                        <strong><t t-esc="record.employee_id.value"/></strong>
+                                        <strong t-if="is_urgent == true"> / Urgent</strong>
+                                    </span></div>
+                                <div>
+                                    <strong><t t-esc="record.approval_status.value"/></strong>
+                                </div>
+                            </div>
+                            <div class="o_kanban_record_subtitle">
+                                <i class="fa fa-calendar" aria-label="Period" role="img" title="Period"></i>
+                                <t t-esc="record.check_in.value"/>
+                                - <t t-esc="record.check_out.value"/>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <button 
+                                    t-if="record.approval_status.raw_value === 'ongoing'"
+                                    attrs="{'invisible': ['|', ('approval_status', '!=', 'ongoing'), ('can_use_button', '=', False)]}"
+                                    name="manager_required" 
+                                    type="object" 
+                                    class="btn btn-link btn-sm ps-0">
+                                    <i class="fa fa-thumbs-up"/> M-Required In-office
+                                </button>
+
+                                <button 
+                                    t-if="record.approval_status.raw_value === 'ongoing'" 
+                                    name="cancel_wfh" 
+                                    attrs="{'invisible': ['|', ('approval_status', '!=', 'ongoing'), ('can_use_button', '=', False)]}"
+                                    type="object" 
+                                    class="btn btn-link btn-sm ps-0">
+                                    <i class="fa fa-times"/> Cancel
+                                </button>
+
+                                <button 
+                                    t-if="record.approval_status.raw_value === 'pending_approval'"
+                                    attrs="{'invisible': ['|', ('approval_status', '!=', 'pending_approval'), ('can_use_button', '=', False)]}"
+                                    name="approve_wfh" 
+                                    type="object" 
+                                    class="btn btn-link btn-sm ps-0">
+                                    <i class="fa fa-thumbs-up"/> Approve
+                                </button>
+
+                                <button 
+                                    t-if="record.approval_status.raw_value === 'pending_approval'" 
+                                    name="reject_wfh" 
+                                    attrs="{'invisible': ['|', ('approval_status', '!=', 'pending_approval'), ('can_use_button', '=', False)]}"
+                                    type="object" 
+                                    class="btn btn-link btn-sm ps-0">
+                                    <i class="fa fa-times"/> Reject
+                                </button>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_attendance.hr_attendance_action" model="ir.actions.act_window">
+        <field name="view_mode">tree,kanban,form,calendar</field>
+    </record>
+
+    <record id="hr_attendance.hr_attendance_action_overview" model="ir.actions.act_window">
+        <field name="view_mode">tree,form,kanban,calendar</field>
+    </record>
+
+    <record id="inherit_attendance_view_form" model="ir.ui.view">
+        <field name="name">res.inherit.attendance.form</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form"/>
+        <field name="arch" type="xml">
+
+                <xpath expr="//sheet" position="before">
+                    <header>
+                        <button name="write_success"
+                                string="Save"
+                                attrs="{'invisible': ['|', ('approval_status', '=', 'approved'), ('is_belong', '=', False)]}"
+                                type="object"
+                                class="btn btn-primary"
+                                data-hotkey="q"/>
+                        <button name="manager_required"
+                                attrs="{'invisible': ['|', ('approval_status', '!=', 'ongoing'), ('can_use_button', '=', False)]}"
+                                string="Require To Office"
+                                type="object"
+                                class="btn oe_highlight"/>
+                        <button name="approve_wfh"
+                                attrs="{'invisible': ['|', ('approval_status', '!=', 'pending_approval'), ('can_use_button', '=', False)]}"
+                                string="Approve"
+                                type="object"
+                                class="oe_highlight"/>
+                        <button name="reject_wfh"
+                                attrs="{'invisible': ['|', ('approval_status', '!=', 'pending_approval'), ('can_use_button', '=', False)]}"
+                                string="Reject"
+                                type="object"
+                                class="btn oe_highlight"/>
+                        <button name="cancel_wfh"
+                                attrs="{'invisible': [('approval_status', 'not in', ['request_completed', 'ongoing'])]}"
+                                type="object"
+                                class="btn btn-danger oe_highlight"
+                                string="Cancel"/>
+                        <!-- <button name="cancel_wfh"
+                                attrs="{'invisible': ['|', ('approval_status', '!=', 'ongoing'), ('employee_btn_available', '=', False)]}"
+                                type="object"
+                                class="btn oe_highlight"
+                                string="Cancel"/> -->
+                        <button name="approve_attendance"
+                                attrs="{'invisible': ['|', ('approval_status', '!=', 'under_review'), ('can_use_button', '=', False)]}"
+                                string="Verify"
+                                type="object"
+                                class="btn oe_highlight"/>
+                    </header>
+                    <header>
+                        <field name="approval_status" attrs="{'invisible': ['|',('approval_status', 'in', ['request_cancelled', 'manager_required']), ('category','=','work_at_office')]}" widget="statusbar" statusbar_visible="ongoing,request_completed,normal,approved"/>
+                        <field name="approval_status" attrs="{'invisible': [('approval_status', '!=', 'request_cancelled')]}" widget="statusbar" statusbar_visible="ongoing,request_cancelled"/>
+                        <field name="approval_status" attrs="{'invisible': [('approval_status', '!=', 'manager_required')]}" widget="statusbar" statusbar_visible="ongoing,manager_required"/>
+                        <field name="approval_status" attrs="{'invisible': [('category', '=', 'work_from_home')]}" widget="statusbar" statusbar_visible="normal,approved"/>
+                    </header>
+                </xpath>
+                <xpath expr="//field[@name='employee_id']" position="before">
+                        <field name="barcode"/>
+                </xpath>
+                <xpath expr="//field[@name='employee_id']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('id', '!=', False)]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='check_in']" position="attributes">
+                    <attribute name="attrs">{'readonly': ['|',
+                        ('approval_status', 'in', ['approved', 'ongoing', 'request_cancelled']),
+                        ('is_belong', '=', False)
+                        ]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='check_out']" position="attributes">
+                    <attribute name="attrs">{'readonly': ['|',
+                        ('approval_status', 'in', ['approved', 'ongoing', 'request_cancelled']),
+                        ('is_belong', '=', False)
+                         ]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='check_out']" position="after">
+                    <field name="worked_hours" widget="float_time"/>
+                    <field name="time_offset"
+                           decoration-success="time_offset &gt; 0"
+                           decoration-danger="time_offset &lt; 0"
+                           widget="float_time"
+                    />
+                    <field name="is_urgent" attrs="{'invisible': [('category', '=', 'work_at_office')], 'readonly': True}"/>
+
+<!--                    <field name="approval_status"-->
+<!--                           attrs="{'readonly': [('approval_status', '=', 'approved')]}"-->
+<!--                           decoration-success="approval_status == 'approved'"-->
+<!--                           decoration-warning="approval_status == 'under_review'"-->
+<!--                           widget="badge"-->
+<!--                    />-->
+                    <field name="approved_by"/>
+                    <field name="category" attrs="{'readonly': [('id', '!=', False)]}"/>
+                    <field name="description" attrs="{'invisible': [('category', '=', 'work_at_office')]}"/>
+                    <field name="reason" attrs="{'readonly': [('approval_status', '=', 'approved')]}"
+                            placeholder="E.g. Missing data"/>
+                    <field name="raw_data_ids" attrs="{'readonly': True, 'invisible': [('raw_data_ids', '=', [])]}"/>
+                    <field name="can_use_button" attrs="{'invisible': True}"/>
+                    <field name="employee_btn_available" attrs="{'invisible': True}"/>
+                    <field name="is_belong" attrs="{'invisible': True}"/>
+                </xpath>
+                <xpath expr="//sheet" position="after">
+                    <script>
+                        $(document).ready(function(){
+                        $(".modal-footer").hide();
+                        });
+                    </script>
+                </xpath>
+                <xpath expr="//form" position="inside">
+
+                    <div class="oe_chatter" style="display:block;">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </xpath>
+        </field>
+    </record>
+    <record id="action_open_wizard" model="ir.actions.act_window">
+
+        <field name="name">open.wizard.attendance</field>
+
+        <field name="res_model">hr.attendance</field>
+        <field name="target">inline</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="inherit_attendance_view_form"/>
+    </record>
+
+        <record id="inherit_attendance_view_filter" model="ir.ui.view">
+        <field name="name">res.inherit.attendance.filter</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.hr_attendance_view_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <filter string="Under review" name="approval_status" domain="[('approval_status', '=', 'under_review')]"/>
+                <filter string="Verified" name="approval_status" domain="[('approval_status', '=', 'approved')]"/>   
+            </xpath>
+            <xpath expr="//filter[@name='nocheckout']" position="replace">
+                <filter string="Management Attendance" name="attendance_management" domain="[('employee_id.user_id', '!=', uid)]"/>
+            </xpath>
+            <xpath expr="//filter[@name='myattendances']" position="before">
+                <filter string="Work from Home" name="work_from_home" domain="[('category', '=', 'work_from_home')]"/>
+                <filter string="Work at Office" name="work_at_office" domain="[('category', '=', 'work_at_office')]"/>
+            </xpath>
+            <xpath expr="//filter[@name='employee']">
+                <filter string="Department" name="department" context="{'group_by': 'department_id'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

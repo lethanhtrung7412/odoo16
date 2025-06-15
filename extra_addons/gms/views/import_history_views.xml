@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+
+    <record id="hr_attendance_import_history_view_tree" model="ir.ui.view">
+        <field name="name">List Import history</field>
+        <field name="model">hr.attendance.import.history</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom" create="0">
+                <field name="date_import"/>
+                <field name="file_name"/>
+                <field name="total_record"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="hr_attendance_import_history_action" model="ir.actions.act_window">
+        <field name="name">Import History</field>
+        <field name="res_model">hr.attendance.import.history</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+            id="import_history_menu_action"
+            name="Import History"
+            sequence="25"
+            action="hr_attendance_import_history_action" parent="hr_attendance.menu_hr_attendance_root"/>
+</odoo>
